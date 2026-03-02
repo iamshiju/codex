@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Global Employee Experience Dashboard</title>
+  <style>
+    :root {
+      --navy-900: #0e1c3d;
+      --navy-700: #1f3a66;
+      --navy-500: #315a94;
+      --gray-900: #253043;
+      --gray-700: #4d5a6f;
+      --gray-500: #7f8a9d;
+      --gray-300: #d8deea;
+      --gray-100: #f4f6fb;
+      --white: #ffffff;
+      --good: #2f7d5a;
+      --warn: #b17a21;
+      --radius: 12px;
+      --shadow: 0 8px 24px rgba(21, 37, 71, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", "Segoe UI", Arial, sans-serif;
+      color: var(--gray-900);
+      background: linear-gradient(165deg, #eff3fa 0%, #f9fbff 100%);
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px 36px 40px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 24px;
+      gap: 24px;
+    }
+
+    .headline h1 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.1;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--navy-900);
+    }
+
+    .headline p {
+      margin: 8px 0 0;
+      color: var(--gray-700);
+      font-size: 14px;
+      letter-spacing: 0.01em;
+    }
+
+    .meta {
+      text-align: right;
+      font-size: 13px;
+      color: var(--gray-700);
+      line-height: 1.6;
+      min-width: 250px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--gray-300);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .card h2 {
+      margin: 0;
+      color: var(--navy-900);
+      font-size: 20px;
+      font-weight: 650;
+      letter-spacing: -0.01em;
+    }
+
+    .card .sub {
+      margin: 8px 0 18px;
+      color: var(--gray-700);
+      font-size: 13px;
+    }
+
+    .overview { grid-column: span 7; }
+    .roi { grid-column: span 5; }
+    .leaders { grid-column: span 8; }
+    .compliance { grid-column: span 4; }
+
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .kpi {
+      border: 1px solid var(--gray-300);
+      border-radius: 10px;
+      padding: 14px;
+      background: var(--gray-100);
+    }
+
+    .kpi .label {
+      font-size: 12px;
+      color: var(--gray-700);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .kpi .value {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--navy-900);
+      margin-bottom: 2px;
+    }
+
+    .kpi .trend {
+      font-size: 12px;
+      color: var(--good);
+    }
+
+    .benchmarks {
+      display: grid;
+      gap: 10px;
+    }
+
+    .bar-item {
+      display: grid;
+      grid-template-columns: 210px 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .bar-label {
+      color: var(--gray-700);
+      font-size: 13px;
+    }
+
+    .bar-track {
+      height: 9px;
+      border-radius: 999px;
+      background: #e6ebf4;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--navy-500), var(--navy-700));
+    }
+
+    .bar-value {
+      font-size: 13px;
+      color: var(--gray-900);
+      font-weight: 600;
+      min-width: 40px;
+      text-align: right;
+    }
+
+    .roi-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .roi-tile {
+      border: 1px solid var(--gray-300);
+      border-radius: 10px;
+      padding: 12px;
+      background: #fbfcff;
+    }
+
+    .roi-tile .metric {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--navy-900);
+      margin: 4px 0;
+    }
+
+    .roi-tile .caption {
+      font-size: 12px;
+      color: var(--gray-700);
+    }
+
+    .simulation {
+      border: 1px dashed var(--gray-500);
+      border-radius: 10px;
+      padding: 12px;
+      background: var(--gray-100);
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--gray-700);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--gray-300);
+    }
+
+    th {
+      color: var(--gray-700);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      background: #f9fbff;
+    }
+
+    .rank {
+      color: var(--navy-700);
+      font-weight: 700;
+      width: 30px;
+    }
+
+    .badge {
+      display: inline-flex;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      background: #e9f2ec;
+      color: var(--good);
+    }
+
+    .badge.warn {
+      background: #f5eddc;
+      color: var(--warn);
+    }
+
+    .logo-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .logo {
+      border: 1px solid var(--gray-300);
+      border-radius: 10px;
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      color: var(--navy-700);
+      font-weight: 700;
+      background: #f9fbff;
+    }
+
+    .privacy-list {
+      display: grid;
+      gap: 10px;
+      font-size: 13px;
+    }
+
+    .privacy-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid var(--gray-300);
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: #ffffff;
+    }
+
+    .status {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--good);
+      letter-spacing: 0.03em;
+    }
+
+    @media (max-width: 1100px) {
+      .overview, .roi, .leaders, .compliance { grid-column: span 12; }
+      .kpi-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="headline">
+        <h1>Global Employee Experience Dashboard</h1>
+        <p>Fortune 500 Workforce Intelligence • Board-Ready View</p>
+      </div>
+      <div class="meta">
+        Reporting period: Q4 FY2026<br />
+        Coverage: 128 countries • 412,000 employees<br />
+        Last refresh: 08:15 UTC
+      </div>
+    </header>
+
+    <main class="grid">
+      <section class="card overview">
+        <h2>1) Executive Overview</h2>
+        <p class="sub">Global engagement benchmarks and estimated annual attrition cost impact.</p>
+        <div class="kpi-row">
+          <article class="kpi">
+            <div class="label">Global Engagement Score</div>
+            <div class="value">78.4</div>
+            <div class="trend">▲ +2.1 vs previous quarter</div>
+          </article>
+          <article class="kpi">
+            <div class="label">Voluntary Attrition</div>
+            <div class="value">11.2%</div>
+            <div class="trend">▼ -0.7 pts improvement</div>
+          </article>
+          <article class="kpi">
+            <div class="label">Annual Attrition Cost</div>
+            <div class="value">$486M</div>
+            <div class="trend">Potential savings: $71M at top-quartile benchmark</div>
+          </article>
+        </div>
+        <div class="benchmarks">
+          <div class="bar-item">
+            <div class="bar-label">Your Enterprise</div>
+            <div class="bar-track"><div class="bar-fill" style="width:78.4%"></div></div>
+            <div class="bar-value">78.4</div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">Fortune 500 Median</div>
+            <div class="bar-track"><div class="bar-fill" style="width:74%"></div></div>
+            <div class="bar-value">74.0</div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">Top Quartile Benchmark</div>
+            <div class="bar-track"><div class="bar-fill" style="width:83.5%"></div></div>
+            <div class="bar-value">83.5</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card roi">
+        <h2>2) ROI Simulator</h2>
+        <p class="sub">Model how EX initiatives translate into EBITDA, productivity, and retention outcomes.</p>
+        <div class="roi-grid">
+          <div class="roi-tile">
+            <div class="caption">Projected 12-Month ROI</div>
+            <div class="metric">3.8x</div>
+            <div class="caption">Based on +5 engagement point scenario</div>
+          </div>
+          <div class="roi-tile">
+            <div class="caption">Net Financial Uplift</div>
+            <div class="metric">$128M</div>
+            <div class="caption">After program cost allocation</div>
+          </div>
+          <div class="roi-tile">
+            <div class="caption">Productivity Gain</div>
+            <div class="metric">+4.2%</div>
+            <div class="caption">Equivalent to 1.7M productive hours</div>
+          </div>
+          <div class="roi-tile">
+            <div class="caption">Avoided Replacement Cost</div>
+            <div class="metric">$54M</div>
+            <div class="caption">From predicted attrition reduction</div>
+          </div>
+        </div>
+        <div class="simulation">
+          Scenario selected: <strong>Leadership Coaching + Manager Effectiveness</strong><br />
+          Engagement lift: <strong>+5.0 points</strong> • Attrition change: <strong>-1.8 pts</strong> • Payback period: <strong>7.4 months</strong>
+        </div>
+      </section>
+
+      <section class="card leaders">
+        <h2>3) Leadership &amp; Culture Index</h2>
+        <p class="sub">Rank leaders by team engagement health and culture risk signals.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Leader</th>
+              <th>Business Unit</th>
+              <th>Team Engagement</th>
+              <th>Culture Risk</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="rank">1</td>
+              <td>A. Reynolds</td>
+              <td>North America Operations</td>
+              <td>87.9</td>
+              <td>Low</td>
+              <td><span class="badge">Top Performer</span></td>
+            </tr>
+            <tr>
+              <td class="rank">2</td>
+              <td>L. Tanaka</td>
+              <td>APAC Technology</td>
+              <td>85.4</td>
+              <td>Low</td>
+              <td><span class="badge">Top Performer</span></td>
+            </tr>
+            <tr>
+              <td class="rank">3</td>
+              <td>M. Dubois</td>
+              <td>EMEA Commercial</td>
+              <td>82.1</td>
+              <td>Moderate</td>
+              <td><span class="badge warn">Watch List</span></td>
+            </tr>
+            <tr>
+              <td class="rank">4</td>
+              <td>S. Iyer</td>
+              <td>Global Shared Services</td>
+              <td>80.8</td>
+              <td>Moderate</td>
+              <td><span class="badge warn">Watch List</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card compliance">
+        <h2>4) Compliance &amp; Integrations</h2>
+        <p class="sub">Enterprise HRIS connectivity and global privacy posture.</p>
+        <div class="logo-row">
+          <div class="logo">Workday</div>
+          <div class="logo">SAP SuccessFactors</div>
+        </div>
+        <div class="privacy-list">
+          <div class="privacy-item">
+            <span>GDPR Data Residency Controls</span>
+            <span class="status">COMPLIANT</span>
+          </div>
+          <div class="privacy-item">
+            <span>CCPA/CPRA Privacy Workflow</span>
+            <span class="status">COMPLIANT</span>
+          </div>
+          <div class="privacy-item">
+            <span>SOC 2 Type II Audit Status</span>
+            <span class="status">VERIFIED</span>
+          </div>
+          <div class="privacy-item">
+            <span>SSO / SCIM Provisioning</span>
+            <span class="status">ACTIVE</span>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
